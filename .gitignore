@@ -29,3 +29,8 @@ checkpoints/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Large docx / research paper scripts
+*.docx
+build_research_paper_docx.py
+
