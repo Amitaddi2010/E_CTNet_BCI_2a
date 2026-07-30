@@ -1,0 +1,31 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Datasets and raw data files
+*.gdf
+*.mat
+*.npz
+*.npy
+BCICIV_2a_gdf*/
+C-/
+CTNet_repo/
+
+# Model checkpoints & saved weights
+checkpoints/
+*.pth
+*.pt
+*.onnx
+*.bin
+
+# IDE and System files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,100 @@
+# BCI Competition IV - Dataset 2a PyTorch Framework Configuration
+
+dataset:
+  name: "BNCI2014_001"
+  data_dir: "BCICIV_2a_gdf (1)"
+  num_subjects: 9
+  num_channels: 22
+  sampling_rate: 250
+  bandpass_low: 4.0
+  bandpass_high: 38.0
+  cue_offset_start: 0.0  # seconds relative to trial cue onset
+  cue_offset_end: 4.0    # seconds relative to trial cue onset
+  time_steps: 1000       # (4.0 - 0.0) * 250 Hz
+  num_classes: 4
+  class_labels:
+    - "Left Hand"
+    - "Right Hand"
+    - "Feet"
+    - "Tongue"
+
+augmentation:
+  enable_sr: true  # Segmentation & Reconstruction Data Augmentation (snailpt/CTNet)
+  n_aug: 3         # Data Augmentation Expansion Factor (N_AUG = 3)
+  enable_noise: false
+  noise_std: 0.01
+  enable_mixup: false
+  mixup_alpha: 0.25
+  enable_crop: false
+  crop_size: 900
+  enable_channel_mask: false
+  channel_mask_prob: 0.15
+
+models:
+  active_model: "CTNet" # "CTNet", "ShallowFBCSPNet", "EEGNet", or "EEGConformerATCNet"
+  
+  ShallowFBCSPNet:
+    in_channels: 22
+    time_steps: 1000
+    n_classes: 4
+    n_filters: 40
+    filter_time_length: 25
+    pool_time_length: 75
+    pool_time_stride: 15
+    dropout: 0.5
+
+  EEGNet:
+    F1: 8
+    D: 2
+    F2: 16
+    kernel_length: 64
+    dropout: 0.25
+
+  EEGConformerATCNet:
+    in_channels: 22
+    time_steps: 1000
+    n_classes: 4
+    conv_filters: 32
+    multi_scale_kernels: [7, 15, 31, 63]
+    spatial_depth: 2
+    transformer_heads: 4
+    transformer_dim: 64
+    tcn_channels: [32, 64]
+    tcn_kernel_size: 5
+    dropout: 0.3
+
+  CTNet:
+    F1: 16
+    D: 2
+    F2: 32
+    kernel_length: 64
+    d_model: 64
+    nhead: 4
+    num_layers: 2
+    dropout: 0.5
+
+training:
+  batch_size: 32
+  device: "cuda" # fallback to cpu automatically if cuda unavailable
+  seed: 42
+  label_smoothing: 0.05
+  
+  stage1_pretrain:
+    enabled: false
+    epochs: 100
+    lr: 0.001
+    weight_decay: 0.01
+
+  stage2_finetune:
+    epochs: 120
+    lr: 0.001
+    backbone_lr: 0.0001
+    head_lr: 0.001
+    weight_decay: 0.01
+    freeze_backbone_epochs: 0
+
+paths:
+  checkpoint_dir: "./checkpoints"
+  output_dir: "./results"
+  figures_dir: "./results/figures"
+
